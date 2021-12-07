@@ -63,7 +63,7 @@ void setup() {
   delay(2000);
 }
 /*
-  Funkcja sluzaca wypisania informacji o wcisnietym przycisku oraz wartosci, dla ktorej wcisniety przycisk zostal zidentyfikowany
+  Funkcja sluzaca do wypisania informacji o wcisnietym przycisku oraz wartosci, dla ktorej wcisniety przycisk zostal zidentyfikowany
 */
 void writeButtonLabel(const int value){
   //definicja bufora
