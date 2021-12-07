@@ -7,63 +7,93 @@
 #define DHTTYPE DHT11 // DHT 11
 #define DHTPIN 5
 #define ADCPIN 0
+//zdefiniowanie zmiennej przechowujacej informacje o czujniku dht11
 DHT dht(DHTPIN, DHTTYPE,50);
 const int rs = 12, en = 13, d4 = 4, d5 = 0, d6 = 2, d7 = 14;
+//zdefiniowanie zmiennej przechowujacej informacje o ekranie lcd
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 int nAdcReading = 0;
+//zdefiniowanie zmiennej odczytujacej dzielnik napiecia z odpowiedniego pinu
 int nAD0 = analogRead(ADCPIN);
-void printName(const char* str1, const char* str2) {
+
+/*
+  Funkcja słuąca do wyświelania na ekranie dwoch lini tekstu
+*/
+void printTwoLinesOnDisplay(const char* firstLine, const char* secondLine) {
+  //czyszcenie zawartości programu
   lcd.clear();
+  //ustawianie kursora na pierwszy wiersz (początek wypisywania tekstu na ekranie)
   lcd.setCursor(0,0);
-  lcd.print(str1);
+  //wypisanie na ekranie pierwszej linii tekstu
+  lcd.print(firstLine);
+  //ustawianie kursora na drugi wiersz (początek wypisywania tekstu)
   lcd.setCursor(0,1);
-  lcd.print(str2);
+  //wypisanie na ekranie drugiej linii tekstu
+  lcd.print(secondLine);
+  //opoznienie wykonywania ekranu na 1000ms
   delay(1000);
 }
+/*
+  Funkcja sluzaca do odczytania wartosci z czujnika i wypisaniu ich po odpowiednim sformatowaniu na ekran
+*/
 void readDhtValuesAndPrint(){
+  //odczyt wilgotnosci z czujnika i zapsanie jej w zmiennej hum
   float hum = dht.readHumidity();
+  //odczyt temperatury z czujnika i zapisanie jej w zmiennej temp
   float temp = dht.readTemperature();
+  //stworzenie dwoch buforow w celu formatowania danych
   char buffer[16];
   char buffer1[16];
+  //odpowienie formatowanie danych, zapisanie floatow do bufora zachowujac tylko jedna cyfre po przecinku
   sprintf(buffer, "Humidity:%2.1f%%Rh", hum);
   sprintf(buffer1, "Temp:%2.1f C", temp);
-  printName(buffer,buffer1);
-  delay(5000);
+  //wyswietlenie wartosci na ekranie
+  printTwoLinesOnDisplay(buffer,buffer1);
+  //opoznienie programu o dodatkowe 4000ms (czyli w sumie 5000ms uwzgledniajac opoznienie w funkcji printTwoLinesOnDisplay)
+  delay(4000);
 }
 void setup() {
   // put your setup code here, to run once:
+  //inicjalizacja ekranu (16 znakow na linie, dwie linie tekstu)
   lcd.begin(16,2);
+  //inicjalizacja czujnika dht11
   dht.begin();
-  delay(1000);
   // printName("Patryk Langer","Pawel Majszyk");
   // delay(5000);
 }
+/*
+  Funkcja sluzaca wypisania informacji o wcisnietym przycisku oraz wartosci, dla ktorej wcisniety przycisk zostal zidentyfikowany
+*/
 void writeButtonLabel(const int value){
+  //definicja bufora
   char buffer[16];
-  sprintf(buffer, "%d", nAD0);
+  //wpisanie wartosci przekazanej do funkcji do bufora
+  sprintf(buffer, "%d", value);
+  //switch sprawdzajacy wartosc przekazana do funkcji i wypisujacy na ekranie odpowiednie labela dla konkretnego przycisku wraz z wartoscia (wartosci zostaly wczesniej sprawdzone manualnie)
 switch(value){
     case 1024:
-      printName(buffer, "No button clicked!");
+      printTwoLinesOnDisplay(buffer, "No button clicked!");
       break;
     case 780 ... 820:
-      printName(buffer, "Button: Left!");
+      printTwoLinesOnDisplay(buffer, "Button: Left!");
       break;
     case 220 ... 330:
-      printName(buffer, "Button: Up!");
+      printTwoLinesOnDisplay(buffer, "Button: Up!");
       break; 
     case 470 ... 550:
-      printName(buffer, "Button: Down!");
+      printTwoLinesOnDisplay(buffer, "Button: Down!");
       break; 
     case 0 ... 100:
-      printName(buffer, "Button: Right!");
+      printTwoLinesOnDisplay(buffer, "Button: Right!");
       break; 
     default:
-      printName(buffer, "Something went wrong! :(");
+      printTwoLinesOnDisplay(buffer, "Something went wrong! :(");
       break;
   }
 }
 
 void loop() {
+  //odczytanie dzielnika napiecia z odpowiedniego pinu
   nAD0 = analogRead(ADCPIN); 
   writeButtonLabel(nAD0);
 }
