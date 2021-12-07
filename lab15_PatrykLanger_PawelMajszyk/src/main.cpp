@@ -20,7 +20,7 @@ int nAD0 = analogRead(ADCPIN);
   Funkcja słuąca do wyświelania na ekranie dwoch lini tekstu
 */
 void printTwoLinesOnDisplay(const char* firstLine, const char* secondLine) {
-  //czyszcenie zawartości programu
+  //czyszcenie zawartości ekranu
   lcd.clear();
   //ustawianie kursora na pierwszy wiersz (początek wypisywania tekstu na ekranie)
   lcd.setCursor(0,0);
