@@ -58,8 +58,9 @@ void setup() {
   lcd.begin(16,2);
   //inicjalizacja czujnika dht11
   dht.begin();
-  // printName("Patryk Langer","Pawel Majszyk");
-  // delay(5000);
+  //wypisane imion i nazwisk na 3000ms po włączeniu urządzenia
+  printTwoLinesOnDisplay("Patryk Langer","Pawel Majszyk");
+  delay(2000);
 }
 /*
   Funkcja sluzaca wypisania informacji o wcisnietym przycisku oraz wartosci, dla ktorej wcisniety przycisk zostal zidentyfikowany
